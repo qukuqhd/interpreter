@@ -119,7 +119,7 @@ func (l *Lexer) readIdentifier() string {
 
 // isLetter 判断是否为合法的标识符的字符
 func isLetter(ch rune) bool {
-	return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ch == '_'
+	return !(ch == 0 || ('0' <= ch && ch <= '9') || ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t')
 }
 
 // skipSpace 跳过不必的换行空白
