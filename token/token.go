@@ -30,6 +30,13 @@ const ( //词法单元的类型
 	//关键字
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+	IF       = "IF"
+	RETURN   = "RETURN"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	ELSE     = "ELSE"
+	EQ       = "=="
+	NOT_EQ   = "!="
 
 	EOF     = "EOF"     //文件结束
 	ILLEGAL = "ILLEGAL" //未知的词法单元
@@ -43,8 +50,15 @@ type Token struct {
 
 // keyWords 关键词容器
 var keyWords = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
+	"fn":     FUNCTION,
+	"let":    LET,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
+	"false":  FALSE,
+	"true":   TRUE,
+	"==":     EQ,
+	"!=":     NOT_EQ,
 }
 
 // 检查标识符定义是否为关键字

@@ -46,7 +46,14 @@ func (l *Lexer) NextToken() *token.Token {
 	l.skipSpace()
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar() //往下一个读取字符
+			tok.Type = token.EQ
+			tok.Literal = string(ch) + string(l.ch)
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
 	case '-':
@@ -60,7 +67,14 @@ func (l *Lexer) NextToken() *token.Token {
 	case '<':
 		tok = newToken(token.LT, l.ch)
 	case '!':
-		tok = newToken(token.BANG, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar() //往下一个读取字符
+			tok.Type = token.NOT_EQ
+			tok.Literal = string(ch) + string(l.ch)
+		} else {
+			tok = newToken(token.BANG, l.ch)
+		}
 	case '(':
 		tok = newToken(token.LPAREN, l.ch)
 	case ')':
@@ -134,4 +148,13 @@ func (l *Lexer) sliceByRule(rule func(rune) bool) (begin, end int) {
 	}
 	end = l.position
 	return
+}
+
+//查看下一个字符的内容 peekChar
+func (l *Lexer) peekChar() rune {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
 }
