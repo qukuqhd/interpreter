@@ -9,8 +9,14 @@ const ( //词法单元的类型
 	INT   = "INT"
 
 	//运算符
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
+	LT       = "<"
+	GT       = ">"
 
 	//分割符
 	COMMA     = ","
