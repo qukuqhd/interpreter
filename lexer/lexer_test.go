@@ -14,6 +14,8 @@ func Test_NextToken(t *testing.T) {
 	let add = fn(x, y) {
 	x + y;
 	};
+	/* 调用add函数把价格赋值给
+	result变量*/
 	let result = add(five, ten);
 	5 < 10 > 5;
 	if (5 < 10) {
