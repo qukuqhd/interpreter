@@ -61,7 +61,15 @@ func (l *Lexer) NextToken() *token.Token {
 	case '*':
 		tok = newToken(token.ASTERISK, l.ch)
 	case '/':
-		tok = newToken(token.SLASH, l.ch)
+		if l.peekChar() == '/' { //如果下一个还是/说明是单行注释
+			l.skipSingleLineNotes()
+			return l.NextToken() //忽略掉注释部分再往下分析
+		} else if l.peekChar() == '*' { //如果下一个是*说明是多行注释
+			l.skipMultiLineNotes()
+			return l.NextToken()
+		} else {
+			tok = newToken(token.SLASH, l.ch)
+		}
 	case '>':
 		tok = newToken(token.GT, l.ch)
 	case '<':
@@ -124,8 +132,30 @@ func isLetter(ch rune) bool {
 
 // skipSpace 跳过不必的换行空白
 func (l *Lexer) skipSpace() {
-	for l.ch == ' ' || l.ch == '\n' || l.ch == '\r' || l.ch == '\t' {
-		l.readChar() //往下走接着读取
+	l.skipByRule(func(r rune) bool {
+		return r == ' ' || r == '\n' || r == '\r' || r == '\t'
+	})
+}
+
+// skipSingleLineNotes 跳过单行注释
+func (l *Lexer) skipSingleLineNotes() {
+	l.skipByRule(func(r rune) bool {
+		return r != '\n' && r != 0 //如果不是换行或者是结束就视为注释进行忽略
+	})
+}
+
+// skipMultiLineNotes 跳过多行注释
+func (l *Lexer) skipMultiLineNotes() {
+	for {
+		if l.ch == 0 { //如果是终止就直接结束
+			break
+		}
+		if l.ch == '*' && l.peekChar() == '/' { //得到了多行注释的结束符就再把结束符跳过
+			l.readChar()
+			l.readChar()
+			break
+		}
+		l.readChar()
 	}
 }
 
@@ -148,6 +178,13 @@ func (l *Lexer) sliceByRule(rule func(rune) bool) (begin, end int) {
 	}
 	end = l.position
 	return
+}
+
+// skipByRule 根据规则进行跳过
+func (l *Lexer) skipByRule(rule func(rune) bool) {
+	for rule(l.ch) { //如果符合规则就跳过往下读取
+		l.readChar()
+	}
 }
 
 //查看下一个字符的内容 peekChar

@@ -9,7 +9,7 @@ import (
 // 测试NextToken函数来完成词法分析器的工作
 func Test_NextToken(t *testing.T) {
 	input := `
-	let five = 5;
+	let five = 5;//定义变量five并且赋值为5
 	let ten = 10;
 	let add = fn(x, y) {
 	x + y;
